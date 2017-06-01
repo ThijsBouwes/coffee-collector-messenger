@@ -14,16 +14,18 @@ privateKeyPath = os.getenv('PRIVATE_KEY_PATH')
 def sendSlackMessage(value):
     url = os.getenv('SLACK_API')
     payload =  {"text": "The current level of CC is: %s cm left %s" % (value, getEmoticon(value))}
-    return requests.post(url, data=json.dumps(payload)) 
+    return requests.post(url, data=json.dumps(payload))
 
 def getEmoticon(level):
 	level = int(level)
 	if level > 50:
 		return ":grinning:"
-	elif level < 50 and level > 15:
+	elif level <= 50 and level > 15:
 		return ":slightly_smiling_face:"
+    elif level <= 15 and level > 5:
+        return ":cold_sweat:"
 	else:
-		return ":triumph:"
+		return ":scream:"
 
 def ccSensorCallback(client, userdata, message):
 	print("Received a new message: ")
