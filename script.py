@@ -22,8 +22,8 @@ def getEmoticon(level):
 		return ":grinning:"
 	elif level <= 50 and level > 15:
 		return ":slightly_smiling_face:"
-    elif level <= 15 and level > 5:
-        return ":cold_sweat:"
+	elif level <= 15 and level > 5:
+		return ":cold_sweat:"
 	else:
 		return ":scream:"
 
