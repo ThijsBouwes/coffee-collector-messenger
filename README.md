@@ -1,3 +1,3 @@
-# Coffee Collector Messenger
+# Coffee Collector
 
-Pixel Fusion Python coffee collector messenger
+Pixel Fusion Python coffee collector

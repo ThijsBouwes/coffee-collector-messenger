@@ -27,5 +27,5 @@ def calculateDistance():
     distance = (pulse_end - pulse_start) * 17150
     distance = round(distance, 2)
 
-    if distance > 1 and distance < 400:
+    if distance >= 1 and distance < 400:
         return distance;

@@ -3,11 +3,9 @@ import time
 from Services import *
 
 while True:
-    localReading = sensor.calculateDistance() if sensor.calculateDistance() else 0
-    if (localReading != ""):
-        mqtt.publish(str(localReading))
-
-    screen.drawStatsPageOne(localReading)
+    reading = sensor.calculateDistance()
+    slack.messageCheck(reading)
+    screen.drawStatsPageOne(reading)
     time.sleep(2)
     screen.drawStatsPageTwo()
     time.sleep(2)
