@@ -1,1 +1,1 @@
-__all__ = ["screen", "sensor", "mqtt"]
+__all__ = ["screen", "sensor", "slack"]

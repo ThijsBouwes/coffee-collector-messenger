@@ -1,13 +1,14 @@
 from datetime import datetime, timedelta
+from Services import helpers
 import json
-import request 
+import requests
+import os
 
 latestTime = datetime.now()
 latestEmoticon = ''
 
 def messageCheck(level):
     global latestTime, latestEmoticon
-    level = int(level)
     emoticon = getEmoticon(level)
 
     #time past or emoticon / level changed
@@ -18,7 +19,7 @@ def messageCheck(level):
 
 def sendSlackMessage(value):
     url = os.getenv('SLACK_API')
-    payload =  {"text": "The current level of CC is: %s cm left %s" % (value, getEmoticon(value))}
+    payload =  {"text": "The current level of CC is: %s %% %s" % (helpers.calculatePercentage(value), getEmoticon(value))}
     
     return requests.post(url, data=json.dumps(payload)) 
 
@@ -34,10 +35,10 @@ def getEmoticon(level):
 
 def getTime(level):
     if level > 50:
-        return datetime.now() + timedelta(seconds=24)
+        return datetime.now() + timedelta(hours=24)
     elif level <= 50 and level > 15:
-        return datetime.now() + timedelta(seconds=12)
+        return datetime.now() + timedelta(hours=12)
     elif level <= 15 and level > 5:
-        return datetime.now() + timedelta(seconds=6)
+        return datetime.now() + timedelta(hours=6)
     else:
-        return datetime.now() + timedelta(seconds=3)
+        return datetime.now() + timedelta(hours=3)

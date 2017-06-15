@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_SSD1306
 
+from Services import helpers
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -44,43 +45,72 @@ bottom = height-padding
 x = 0
 
 # Load default font.
-font = ImageFont.load_default()
+# font = ImageFont.load_default()
+font = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 18)
+font1 = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 12)
+font2 = ImageFont.load_default()
 
-def drawStatsPageOne(Reading):
+
+currentPage = 0
+
+def drawPage(data):
+    global currentPage
+
+    if (currentPage == 0):
+        drawHelper(drawIntroPage)
+    elif (currentPage == 1):
+        drawHelper(drawCcLevel, data)
+    elif (currentPage == 2):
+        drawHelper(drawStatsPage)
+
+    if (currentPage > 2):
+        currentPage = 0
+
+def drawHelper(currentDrawer, parameters=False):
+    global currentPage
+    
     # Draw a black filled box to clear the image.
     draw.rectangle((0,0,width,height), outline=0, fill=0)
 
-    # Shell scripts for system monitoring from here : https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load
-    cmd = "hostname -I | cut -d\' \' -f1"
-    IP = subprocess.check_output(cmd, shell = True )
-    cmd = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f\", $(NF-2)}'"
-    CPU = subprocess.check_output(cmd, shell = True )
-
-    # Write two lines of text.
-    draw.text((x, top+0), "PixelFusion",  font=font, fill=255)
-    draw.text((x, top+8), "CC-level: " + str(Reading), font=font, fill=255)
-    draw.text((x, top+16), "IP: " + str(IP),  font=font, fill=255)
-    draw.text((x, top+25), str(CPU), font=font, fill=255)
+    # Call the current drawer
+    if (parameters != False): 
+        currentDrawer(parameters)
+    else:
+        currentDrawer()
 
     # Display image.
     disp.image(image)
     disp.display()
+    currentPage += 1
 
-def drawStatsPageTwo():
-    # Draw a black filled box to clear the image.
-    draw.rectangle((0,0,width,height), outline=0, fill=0)
+def textCenter(msg, font):
+    w, h = draw.textsize(msg, font)
+    return draw.text(((width-w)/2,(height-h)/2), msg, font=font, fill=255)
 
+def textHorizontalCenter(verticalHeight, msg, font):
+    w, h = draw.textsize(msg, font)
+    return draw.text(((width-w)/2,verticalHeight), msg, font=font, fill=255)
+
+
+def drawIntroPage():
+    textHorizontalCenter(top, "CC", font)
+    textHorizontalCenter(top+20, "PIXELFUSION",  font=font1)
+
+def drawCcLevel(Reading):
+    textCenter("%s %%" % helpers.calculatePercentage(Reading), font)
+
+def drawStatsPage():
     # Shell scripts for system monitoring from here : https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load
     cmd = "free -m | awk 'NR==2{printf \"Mem: %s/%sMB %.2f%%\", $3,$2,$3*100/$2 }'"
     MemUsage = subprocess.check_output(cmd, shell = True )
     cmd = "df -h | awk '$NF==\"/\"{printf \"Disk: %d/%dGB %s\", $3,$2,$5}'"
     Disk = subprocess.check_output(cmd, shell = True )
+    cmd = "hostname -I | cut -d\' \' -f1"
+    IP = subprocess.check_output(cmd, shell = True )
+    cmd = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f\", $(NF-2)}'"
+    CPU = subprocess.check_output(cmd, shell = True )
 
-    # Write two lines of text.
-    draw.text((x, top+0), "PixelFusion",  font=font, fill=255)
-    draw.text((x, top+8), str(MemUsage),  font=font, fill=255)
-    draw.text((x, top+16), str(Disk),  font=font, fill=255)
-
-    # Display image.
-    disp.image(image)
-    disp.display()
+    draw.text((x, top+0), str(MemUsage),  font=font2, fill=255)
+    draw.text((x, top+8), str(Disk),  font=font2, fill=255)
+    draw.text((x, top+16), "IP: " + str(IP),  font=font2, fill=255)
+    draw.text((x, top+25), str(CPU), font=font2, fill=255)
