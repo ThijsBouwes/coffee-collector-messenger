@@ -24,7 +24,7 @@ def sendSlackMessage(value):
     try:
         requests.post(url, data=json.dumps(payload)) 
         return True
-    except request.ConnectionError:
+    except requests.ConnectionError:
         return False
 
 def getEmoticon(level):
