@@ -94,10 +94,14 @@ def textHorizontalCenter(verticalHeight, msg, font):
 
 def drawIntroPage():
     textHorizontalCenter(top, "CC", font)
-    textHorizontalCenter(top+20, "PIXELFUSION",  font=font1)
+    textHorizontalCenter(top+20, "PIXELFUSION", font1)
 
-def drawCcLevel(Reading):
-    textCenter("%s %%" % helpers.calculatePercentage(Reading), font)
+def drawCcLevel(data):
+    if data['connection'] == False:
+        textHorizontalCenter(top, "%s %%" % helpers.calculatePercentage(data['level']), font)
+        textHorizontalCenter(top+20, "WiFi Error", font2)
+    else:
+        textCenter("%s %%" % helpers.calculatePercentage(data['level']), font)
 
 def drawStatsPage():
     # Shell scripts for system monitoring from here : https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load

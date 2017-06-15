@@ -13,15 +13,19 @@ def messageCheck(level):
 
     #time past or emoticon / level changed
     if latestTime < datetime.now() or latestEmoticon != emoticon:
-        sendSlackMessage(level)
         latestTime = getTime(level)
         latestEmoticon = emoticon
+        return sendSlackMessage(level)
 
 def sendSlackMessage(value):
     url = os.getenv('SLACK_API')
     payload =  {"text": "The current level of CC is: %s %% %s" % (helpers.calculatePercentage(value), getEmoticon(value))}
     
-    return requests.post(url, data=json.dumps(payload)) 
+    try:
+        requests.post(url, data=json.dumps(payload)) 
+        return True
+    except request.ConnectionError:
+        return False
 
 def getEmoticon(level):
     if level > 50:

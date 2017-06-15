@@ -8,13 +8,15 @@ latestSensorUpdate = datetime.now()
 latestTimeScreenUpdate = datetime.now()
 
 while True:
+    connectedToSlack = True
+
     if latestSensorUpdate < datetime.now():
         reading = sensor.calculateDistance()
         latestSensorUpdate = datetime.now() + timedelta(seconds=3)
         if reading != False:
-            slack.messageCheck(reading)
+            connectedToSlack = slack.messageCheck(reading)
     if latestTimeScreenUpdate < datetime.now() and reading != False:
-        screen.drawPage(reading)
+        screen.drawPage({'level': reading, 'connection': connectedToSlack})
         latestTimeScreenUpdate = datetime.now() + timedelta(seconds=3)
         
 GPIO.cleanup()
