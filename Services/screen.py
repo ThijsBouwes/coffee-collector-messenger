@@ -1,13 +1,11 @@
 import RPi.GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_SSD1306
-
+import subprocess
 from Services import helpers
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-
-import subprocess
 
 RST = None
 DC = 23
@@ -36,21 +34,18 @@ draw = ImageDraw.Draw(image)
 # Draw a black filled box to clear the image.
 draw.rectangle((0,0,width,height), outline=0, fill=0)
 
-# Draw some shapes.
 # First define some constants to allow easy resizing of shapes.
 padding = -2
 top = padding
 bottom = height-padding
-# Move left to right keeping track of the current x position for drawing shapes.
 x = 0
 
-# Load default font.
-# font = ImageFont.load_default()
+# Load fonts
 font = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 18)
 font1 = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 12)
 font2 = ImageFont.load_default()
 
-
+#Swithc for pages
 currentPage = 0
 
 def drawPage(data):
@@ -66,6 +61,8 @@ def drawPage(data):
     if (currentPage > 2):
         currentPage = 0
 
+
+# Screen helpers
 def drawHelper(currentDrawer, parameters=False):
     global currentPage
     
@@ -92,6 +89,7 @@ def textHorizontalCenter(verticalHeight, msg, font):
     return draw.text(((width-w)/2,verticalHeight), msg, font=font, fill=255)
 
 
+# Actual pages
 def drawIntroPage():
     textHorizontalCenter(top, "CC", font)
     textHorizontalCenter(top+20, "PIXELFUSION", font1)

@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import RPi.GPIO as GPIO
-import time
 from Services import *
 
 global latestTimeScreenUpdate
