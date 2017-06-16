@@ -1,4 +1,2 @@
-*.pem
-*.key
-*.crt
+*.pyc
 .env
