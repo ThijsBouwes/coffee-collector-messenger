@@ -45,22 +45,21 @@ font = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 18)
 font1 = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 12)
 font2 = ImageFont.load_default()
 
-#Swithc for pages
+# Switch for pages
 currentPage = 0
 
 def drawPage(data):
     global currentPage
 
-    if (currentPage == 0):
+    if currentPage == 0:
         drawHelper(drawIntroPage)
-    elif (currentPage == 1):
+    elif currentPage == 1:
         drawHelper(drawCcLevel, data)
-    elif (currentPage == 2):
+    elif currentPage == 2:
         drawHelper(drawStatsPage)
 
-    if (currentPage > 2):
+    if currentPage > 2:
         currentPage = 0
-
 
 # Screen helpers
 def drawHelper(currentDrawer, parameters=False):
@@ -70,7 +69,7 @@ def drawHelper(currentDrawer, parameters=False):
     draw.rectangle((0,0,width,height), outline=0, fill=0)
 
     # Call the current drawer
-    if (parameters != False): 
+    if parameters != False:
         currentDrawer(parameters)
     else:
         currentDrawer()
@@ -87,7 +86,6 @@ def textCenter(msg, font):
 def textHorizontalCenter(verticalHeight, msg, font):
     w, h = draw.textsize(msg, font)
     return draw.text(((width-w)/2,verticalHeight), msg, font=font, fill=255)
-
 
 # Actual pages
 def drawIntroPage():

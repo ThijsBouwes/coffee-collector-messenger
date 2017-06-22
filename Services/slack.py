@@ -11,10 +11,10 @@ def messageCheck(level):
     global latestTime, latestEmoticon
     levelStatus = getLevelStatus(level)
 
-    #time past or emoticon / level changed
+    # Time past or emoticon / level changed
     if latestTime < datetime.now() or latestEmoticon != levelStatus[0]:
-        latestTime = levelStatus[1]
         latestEmoticon = levelStatus[0]
+        latestTime = levelStatus[1]
 
         return sendSlackMessage(level, latestEmoticon)
 

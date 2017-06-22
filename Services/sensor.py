@@ -11,6 +11,8 @@ GPIO.setup(ECHO,GPIO.IN)
 
 def pulseIn(pin, state):
     timeout = datetime.now()+timedelta(seconds=5)
+    pulseTime = time.time()
+
     while GPIO.input(pin)==state:
         pulseTime = time.time()
         if datetime.now() > timeout:
@@ -31,7 +33,7 @@ def calculateDistance():
     except ValueError as error:
         return False
 
-    # speed of sound 34300 cm/s
+    # Speed of sound 34300 cm/s
     distance = round((pulse_end - pulse_start) * 17150, 2)
 
     return distance if 1 <= distance <= 400 else False
