@@ -7,7 +7,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-RST = None
+RST = 24
 DC = 23
 SPI_PORT = 0
 SPI_DEVICE = 0

@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 import RPi.GPIO as GPIO
 import time
 
-TRIG = 21
-ECHO = 20
+TRIG = 14
+ECHO = 23
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(TRIG,GPIO.OUT)

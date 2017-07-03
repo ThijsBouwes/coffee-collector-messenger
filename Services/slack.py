@@ -2,10 +2,13 @@ from datetime import datetime, timedelta
 from Services import helpers
 import json
 import requests
+import random
 import os
 
+sentence = ['The universe requires your power: %s :super:', 'ohno, the kitchen is overflowing do something: %s :sweat_drops:']
 latestTime = datetime.now()
 latestEmoticon = ''
+USER_ENDPOINT = 'https://slack.com/api/users.list'
 
 def messageCheck(level):
     global latestTime, latestEmoticon
@@ -17,6 +20,24 @@ def messageCheck(level):
         latestTime = levelStatus[1]
 
         return sendSlackMessage(level, latestEmoticon)
+
+def getSlackUsers():
+    token = os.getenv('SLACK_TOKEN')
+    payload =  {"token": token}
+    r = requests.post(USER_ENDPOINT, data=payload)
+    data = json.loads(r.text)
+
+    return data['members']
+
+def filterMembers(members):
+    elements = []
+
+    for member in members:
+
+        if member['deleted'] == False and member['is_bot'] == False and member['is_restricted'] == False and member['is_ultra_restricted'] == False:
+            elements.append(member['name'])
+
+    return elements
 
 def sendSlackMessage(level, emoticon):
     url = os.getenv('SLACK_API')
@@ -36,4 +57,9 @@ def getLevelStatus(level):
     elif 5 < level <= 15:
         return (":cold_sweat:", datetime.now() + timedelta(hours=6))
     else:
-        return (":scream:", datetime.now() + timedelta(hours=3))
+        memberNames = filterMembers(getSlackUsers())
+        selectedMembers = random.sample(memberNames, 3)
+        selectedSentence = random.choice(sentence)
+        users = "@"+", @".join(str(x) for x in selectedMembers)
+
+        return (":scream:\n" + selectedSentence % users, datetime.now() + timedelta(hours=3))
