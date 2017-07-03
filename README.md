@@ -11,7 +11,7 @@ Based on the level it gives updates on Slack and real time information on the le
 ## Wiring
 ![Wiring digram](/images/setup_bb_zero.png?raw=true "Wiring digram")
 
-Our specific wire (color) layout:
+Color layout:
 ##### SENSOR
 * blue=5V
 * purple=GPIO14 | trig
