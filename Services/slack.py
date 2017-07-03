@@ -55,7 +55,7 @@ def getMessage(status, level):
             "fields": [
                 {
                     "title": "Level",
-                    "value": helpers.calculatePercentage(level) + "%",
+                    "value": "%s %%" % helpers.calculatePercentage(level),
                     "short": True
                 },
                 {
