@@ -12,7 +12,7 @@ sentence = [
     'Ohno, the kitchen is overflowing do something: %s :sweat_drops:'
 ]
 latestTime = datetime.now()
-latestLevel = ''
+latestLevel = ['', '']
 
 STATUS = {
     'a': [':grinning:', 'good'],
@@ -26,13 +26,27 @@ def messageCheck(level):
     global latestTime, latestLevel
     levelStatus = getLevelStatus(level)
 
-    # Time past or emoticon / level changed
-    if latestTime < datetime.now() or latestLevel != levelStatus[0]:
-        latestLevel = levelStatus[0]
+    # Time past or level changed
+    if latestTime < datetime.now():
         latestTime = levelStatus[1]
         message = getMessage(levelStatus[0], level)
 
         return sendSlackMessage(message)
+
+    # Send message when the current and previous reading are the same
+    # And different then three readings ago, dont send on init
+    if latestLevel[0] == levelStatus[0] and latestLevel[1] != levelStatus[0] and latestLevel[1] != '':
+        latestLevel[1] = levelStatus[0]
+        message = getMessage(levelStatus[0], level)
+
+        return sendSlackMessage(message)
+    elif latestLevel[0] != levelStatus[0]:
+        # set first step in history
+        latestLevel[0] = levelStatus[0]
+    elif levelStatus[0] == levelStatus[0]:
+        # set two setps in history
+        latestLevel[1] = latestLevel[0]
+        latestLevel[0] = levelStatus[0]
 
 # hit incoming webhook slack
 def sendSlackMessage(message):
@@ -70,7 +84,7 @@ def getMessage(status, level):
         }]
     }
 
-    if status == "d":
+    if status == "d" or status == "c":
         memberNames = filterMembers(getSlackUsers())
 
         selectedMembers = random.sample(memberNames, 3)
@@ -103,11 +117,11 @@ def filterMembers(members):
 
 # return level status and next time to check
 def getLevelStatus(level):
-    if level > 50:
+    if level > 32:
         return ('a', datetime.now() + timedelta(hours=24))
-    elif 15 < level <= 50:
+    elif 24 < level <= 32:
         return ('b', datetime.now() + timedelta(hours=12))
-    elif 5 < level <= 15:
+    elif 16 < level <= 24:
         return ('c', datetime.now() + timedelta(hours=6))
     else:
         return ('d', datetime.now() + timedelta(hours=3))
