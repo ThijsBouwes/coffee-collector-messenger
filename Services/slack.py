@@ -36,7 +36,7 @@ def messageCheck(level):
 
 # hit incoming webhook slack
 def sendSlackMessage(message):
-    url = os.getenv('SLACK_API')
+    url =  os.environ.get("SLACK_API")
 
     try:
         requests.post(url, data=json.dumps(message))
@@ -83,7 +83,7 @@ def getMessage(status, level):
 
 # get all slack users
 def getSlackUsers():
-    token = os.getenv('SLACK_TOKEN')
+    token =  os.environ.get("SLACK_TOKEN")
     payload =  {"token": token}
     r = requests.post(USER_ENDPOINT, data=payload)
     data = json.loads(r.text)
