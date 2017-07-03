@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_SSD1306
 import subprocess
+import os
+from os.path import join
 from Services import helpers
 from PIL import Image
 from PIL import ImageDraw
@@ -41,8 +43,8 @@ bottom = height-padding
 x = 0
 
 # Load fonts
-font = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 18)
-font1 = ImageFont.truetype('fonts/OpenSans-Bold.ttf', 12)
+font = ImageFont.truetype(join(os.getcwd(), 'fonts/OpenSans-Bold.ttf'), 18)
+font1 = ImageFont.truetype(join(os.getcwd(), 'fonts/OpenSans-Bold.ttf'), 12)
 font2 = ImageFont.load_default()
 
 # Switch for pages
