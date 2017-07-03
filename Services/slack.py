@@ -55,7 +55,7 @@ def getMessage(status, level):
             "fields": [
                 {
                     "title": "Level",
-                    "value": helpers.calculatePercentage(level),
+                    "value": helpers.calculatePercentage(level) + "%",
                     "short": True
                 },
                 {
@@ -110,4 +110,4 @@ def getLevelStatus(level):
     elif 5 < level <= 15:
         return ('c', datetime.now() + timedelta(hours=6))
     else:
-        return ('d' + selectedSentence % users, datetime.now() + timedelta(hours=3))
+        return ('d', datetime.now() + timedelta(hours=3))
