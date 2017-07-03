@@ -66,3 +66,7 @@ Reference for the I2C setup [Adafruit Raspberry pi configuring i2c](https://lear
 ```
 * Reboot the pi, and the script should run now
 * You can also review the logs, if you have any issues `tail -f ~/scripts/log-cc.txt`
+
+
+## Gotchas
+* Make the sensor align perfectly downwards, otherwise you get diverse readings
