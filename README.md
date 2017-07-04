@@ -69,7 +69,7 @@ Reference for the I2C setup [Adafruit Raspberry pi configuring i2c](https://lear
 
 
 ## Slack notification levels
-* percentage is calculated with the height of the can + 10% safety margin.
+* Percentage is calculated with the height of the collector + 10% safety margin.
 * [Formula helper](https://github.com/pixelfusion/coffee-collector-messenger/blob/master/Services/helpers.py#L10)
 
 | Status | CM's left | Color | Emoticon | Percentage of water | Special
