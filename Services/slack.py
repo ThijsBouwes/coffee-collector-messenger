@@ -13,7 +13,6 @@ sentence = [
     'Ohno, the kitchen is overflowing do something: %s :sweat_drops:'
 ]
 latestTime = datetime.now()
-latestLevel = ['', '']
 
 STATUS = {
     'a': [':grinning:', 'good'],
@@ -35,21 +34,7 @@ def messageCheck(level):
 
         return sendSlackMessage(message)
 
-    # Send message when the current and previous reading are the same
-    # And different then three readings ago, dont send on init
-    if latestLevel[0] == levelStatus[0] and latestLevel[1] != levelStatus[0] and latestLevel[1] != '':
-        latestLevel[1] = levelStatus[0]
-        message = getMessage(levelStatus[0], level)
-        logging.info('Slack level change Status: %s Level: %s %%', levelStatus[0], helpers.calculatePercentage(level))
-
-        return sendSlackMessage(message)
-    elif latestLevel[0] != levelStatus[0]:
-        # set first step in history
-        latestLevel[0] = levelStatus[0]
-    elif levelStatus[0] == levelStatus[0]:
-        # set two setps in history
-        latestLevel[1] = latestLevel[0]
-        latestLevel[0] = levelStatus[0]
+    return True
 
 # hit incoming webhook slack
 def sendSlackMessage(message):

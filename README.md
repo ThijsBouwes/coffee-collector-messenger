@@ -80,8 +80,6 @@ Reference for the I2C setup [Adafruit Raspberry pi configuring i2c](https://lear
 | D | `>= 16` | Red | :scream: | 70% - 100% | Tag 3 slack users | 3h |
 
 The notifications are send bassed on the Status level time (A sends message every 24 hours).
-There is also a message send when the status level changes, this only happens when:
-The current and previous reading, are in the same level and the one before that is in a different level.
 
 ## Gotchas
 * Make the sensor align perfectly downwards, otherwise you get diverse readings
