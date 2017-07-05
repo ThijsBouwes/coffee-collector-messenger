@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import RPi.GPIO as GPIO
 import time
+import logging
 
 TRIG = 14
 ECHO = 23
@@ -31,6 +32,8 @@ def calculateDistance():
         pulse_start = pulseIn(ECHO, 0)
         pulse_end = pulseIn(ECHO, 1)
     except ValueError as error:
+        logging.warning(error.message)
+
         return False
 
     # Speed of sound 34300 cm/s

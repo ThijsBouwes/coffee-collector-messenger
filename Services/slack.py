@@ -5,6 +5,7 @@ import requests
 import random
 import os
 import time
+import logging
 
 USER_ENDPOINT = 'https://slack.com/api/users.list'
 sentence = [
@@ -30,6 +31,7 @@ def messageCheck(level):
     if latestTime < datetime.now():
         latestTime = levelStatus[1]
         message = getMessage(levelStatus[0], level)
+        logging.info('Slack message Status: %s Level: %s', levelStatus[0], level)
 
         return sendSlackMessage(message)
 
@@ -38,6 +40,7 @@ def messageCheck(level):
     if latestLevel[0] == levelStatus[0] and latestLevel[1] != levelStatus[0] and latestLevel[1] != '':
         latestLevel[1] = levelStatus[0]
         message = getMessage(levelStatus[0], level)
+        logging.info('Slack level change Status: %s Level: %s', levelStatus[0], level)
 
         return sendSlackMessage(message)
     elif latestLevel[0] != levelStatus[0]:
@@ -56,6 +59,8 @@ def sendSlackMessage(message):
         requests.post(url, data=json.dumps(message))
         return True
     except requests.ConnectionError:
+        logging.warning('Connection Error')
+
         return False
 
 # build slack message, with attachments
