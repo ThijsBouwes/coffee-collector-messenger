@@ -74,10 +74,10 @@ Reference for the I2C setup [Adafruit Raspberry pi configuring i2c](https://lear
 
 | Status | CM's left | Color | Emoticon | Percentage of water | Special | Notification |
 |--|--|--|--|--|--|--|
-| A | `>32` | Green | :grinning: | 0% - 30% | x | 24h |
-| B | `> 24 and <=32` | Blue | :slightly_smiling_face: | 30% - 50% | x | 12h |
-| C | `> 16 and <=24 ` | Orange | :cold_sweat: | 50% - 70% | x | 6h |
-| D | `>16` | Red | :scream: | 70% - 100% | Tag 3 slack users | 3h |
+| A | `> 32` | Green | :grinning: | 0% - 27.5% | x | 24h |
+| B | `> 24 and <= 32` | Blue | :slightly_smiling_face: | 30% - 47.5% | x | 12h |
+| C | `> 16 and <= 24 ` | Orange | :cold_sweat: | 50% - 67.5% | x | 6h |
+| D | `>= 16` | Red | :scream: | 70% - 100% | Tag 3 slack users | 3h |
 
 The notifications are send bassed on the Status level time (A sends message every 24 hours).
 There is also a message send when the status level changes, this only happens when:

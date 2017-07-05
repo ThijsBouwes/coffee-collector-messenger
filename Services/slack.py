@@ -31,7 +31,7 @@ def messageCheck(level):
     if latestTime < datetime.now():
         latestTime = levelStatus[1]
         message = getMessage(levelStatus[0], level)
-        logging.info('Slack message Status: %s Level: %s', levelStatus[0], level)
+        logging.info('Slack message Status: %s Level: %s %%', levelStatus[0], helpers.calculatePercentage(level))
 
         return sendSlackMessage(message)
 
@@ -40,7 +40,7 @@ def messageCheck(level):
     if latestLevel[0] == levelStatus[0] and latestLevel[1] != levelStatus[0] and latestLevel[1] != '':
         latestLevel[1] = levelStatus[0]
         message = getMessage(levelStatus[0], level)
-        logging.info('Slack level change Status: %s Level: %s', levelStatus[0], level)
+        logging.info('Slack level change Status: %s Level: %s %%', levelStatus[0], helpers.calculatePercentage(level))
 
         return sendSlackMessage(message)
     elif latestLevel[0] != levelStatus[0]:

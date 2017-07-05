@@ -11,12 +11,11 @@ logging.basicConfig(level=logging.INFO, filename=join(sys.path[0], 'cc.log'), fo
 
 latestSensorUpdate = datetime.now()
 latestTimeScreenUpdate = datetime.now()
+connectedToSlack = True
 
 logging.info('CC starts')
 
 while True:
-    connectedToSlack = True
-
     if latestSensorUpdate < datetime.now():
         reading = sensor.calculateDistance()
         latestSensorUpdate = datetime.now() + timedelta(seconds=3)
