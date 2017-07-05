@@ -61,7 +61,8 @@ Reference for the I2C setup [Adafruit Raspberry pi configuring i2c](https://lear
 * Setup your `.env` file, see the `.env.example` for reference
 * To auto start the script on boot, you can use a cronjob:
 ```
-@reboot python ~/scripts/coffee-collector-messenger/script.py >> ~/scripts/log-cc.log 2>&1
+@reboot echo "$(date) $(ls -1 | wc -l)" >> ~/scripts/cc-cron.log
+@reboot python ~/scripts/coffee-collector-messenger/script.py >> ~/scripts/cc-cron.log 2>&1
 ```
 * Reboot the pi, and the script should run now
 * You can also review the logs, if you have any issues `tail -f ~/scripts/coffee-collector-messenger/cc.log`
