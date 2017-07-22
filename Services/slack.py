@@ -93,7 +93,7 @@ def getMessage(status, level):
         }]
     }
 
-    if status == "d" or status == "c":
+    if status == "d":
         memberNames = filterMembers(getSlackUsers())
 
         selectedMembers = random.sample(memberNames, 3)
