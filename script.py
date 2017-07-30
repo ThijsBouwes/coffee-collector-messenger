@@ -16,12 +16,14 @@ connectedToSlack = True
 logging.info('CC starts')
 
 while True:
+    reading = False
     if latestSensorUpdate < datetime.now():
         reading = sensor.calculateDistance()
         latestSensorUpdate = datetime.now() + timedelta(seconds=3)
-        if reading != False:
+        if reading is not False:
             connectedToSlack = slack.messageCheck(reading)
-    if latestTimeScreenUpdate < datetime.now() and reading != False:
+
+    if latestTimeScreenUpdate < datetime.now() and reading is not False:
         screen.drawPage({'level': reading, 'connection': connectedToSlack})
         latestTimeScreenUpdate = datetime.now() + timedelta(seconds=3)
 
