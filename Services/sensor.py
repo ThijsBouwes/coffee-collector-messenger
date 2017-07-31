@@ -2,10 +2,11 @@ from datetime import datetime, timedelta
 import RPi.GPIO as GPIO
 import time
 import logging
-from Services.helpers import HEIGHT_CAN
 
+HEIGHT_CAN = 40
 TRIG = 14
 ECHO = 23
+READING_ROUND = 5
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(TRIG,GPIO.OUT)
@@ -30,7 +31,6 @@ def calculateDistance():
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
-    buffer = 5
 
     try:
         pulse_start = pulseIn(ECHO, 0)
@@ -43,6 +43,14 @@ def calculateDistance():
     # Speed of sound 34300 cm/s
     distance = round((pulse_end - pulse_start) * 17150)
     # round distance to upper multiple of 5, e.g. 146 -> 150; 140 -> 145
-    distance += buffer - distance % buffer
+    distance += READING_ROUND - distance % READING_ROUND
 
-    return distance if 0 < distance - buffer <= HEIGHT_CAN else False
+    return distance if 0 < distance - READING_ROUND <= HEIGHT_CAN else False
+
+
+# determines how full the can is
+def calculatePercentage(reading):
+    percentage = round((HEIGHT_CAN - reading) / HEIGHT_CAN * 100)
+    percentage += READING_ROUND - percentage % READING_ROUND
+
+    return 100 if reading >= HEIGHT_CAN else percentage

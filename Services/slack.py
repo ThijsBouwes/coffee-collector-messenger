@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from Services import helpers
+from Services.sensor import calculatePercentage
 import json
 import requests
 import random
@@ -33,7 +33,7 @@ def messageCheck(reading):
     if latestTime < datetime.now():
         latestTime = nextLevelUpdate
         message = getMessage(currentLevelStatus, reading)
-        logging.info('Slack periodic message Status: %s Level: %s %%', currentLevelStatus, helpers.calculatePercentage(reading))
+        logging.info('Slack periodic message Status: %s Level: %s %%', currentLevelStatus, calculatePercentage(reading))
 
         return sendSlackMessage(message)
 
@@ -43,7 +43,7 @@ def messageCheck(reading):
         historicLevels[1] = currentLevelStatus
         latestLevelTime = datetime.now() + timedelta(minutes=30)
         message = getMessage(currentLevelStatus, reading)
-        logging.info('Slack level change Status: %s Level: %s %%', currentLevelStatus, helpers.calculatePercentage(reading))
+        logging.info('Slack level change Status: %s Level: %s %%', currentLevelStatus, calculatePercentage(reading))
 
         return sendSlackMessage(message)
     elif historicLevels[0] != currentLevelStatus:
@@ -82,7 +82,7 @@ def getMessage(status, reading):
             "fields": [
                 {
                     "title": "Level",
-                    "value": "%s %%" % helpers.calculatePercentage(reading),
+                    "value": "%s %%" % calculatePercentage(reading),
                     "short": True
                 },
                 {
