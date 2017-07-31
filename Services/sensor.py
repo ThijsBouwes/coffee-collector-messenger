@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 import time
 import logging
 
-HEIGHT_CAN = 40
+HEIGHT_CAN = 45
 TRIG = 14
 ECHO = 23
 READING_ROUND = 5
@@ -53,4 +53,4 @@ def calculatePercentage(reading):
     percentage = round((HEIGHT_CAN - reading) / HEIGHT_CAN * 100)
     percentage += READING_ROUND - percentage % READING_ROUND
 
-    return 100 if reading >= HEIGHT_CAN else percentage
+    return 100 if reading > HEIGHT_CAN else percentage
