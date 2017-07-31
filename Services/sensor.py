@@ -45,7 +45,7 @@ def calculateDistance():
     # round distance to upper multiple of 5, e.g. 146 -> 150; 140 -> 145
     distance += READING_ROUND - distance % READING_ROUND
 
-    return distance if 0 < distance - READING_ROUND <= HEIGHT_CAN else False
+    return distance if 0 < distance < HEIGHT_CAN else False
 
 
 # determines how full the can is
