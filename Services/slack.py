@@ -10,11 +10,11 @@ import logging
 USER_ENDPOINT = 'https://slack.com/api/users.list'
 sentence = [
     'The universe requires your power: %s :super:',
-    'Ohno, the kitchen is overflowing do something: %s :sweat_drops:'
+    'Ohno, the kitchen is about to flood, do something: %s :sweat_drops:'
 ]
 latestTime = datetime.now()
 latestLevelTime = datetime.now()
-latestLevel = ['', '']
+historicLevels = ['', '']
 
 STATUS = {
     'a': [':grinning:', 'good'],
@@ -23,52 +23,56 @@ STATUS = {
     'd': [':scream:', 'danger']
 }
 
-# check if we need to send status to slack
-def messageCheck(level):
-    global latestTime, latestLevel, latestLevelTime
-    levelStatus = getLevelStatus(level)
+
+# check if we need to send status to slack, if so, do it
+def messageCheck(reading):
+    global latestTime, historicLevels, latestLevelTime
+    currentLevelStatus, nextLevelUpdate = getLevelStatus(reading)
 
     # Time past or level changed
     if latestTime < datetime.now():
-        latestTime = levelStatus[1]
-        message = getMessage(levelStatus[0], level)
-        logging.info('Slack message Status: %s Level: %s %%', levelStatus[0], helpers.calculatePercentage(level))
+        latestTime = nextLevelUpdate
+        message = getMessage(currentLevelStatus, reading)
+        logging.info('Slack periodic message Status: %s Level: %s %%', currentLevelStatus, helpers.calculatePercentage(reading))
 
         return sendSlackMessage(message)
 
     # Send message when the current and previous reading are the same
-    # And different then three readings ago, dont send on init
-    if latestLevel[0] == levelStatus[0] and latestLevel[1] != levelStatus[0] and latestLevel[1] != '' and latestLevelTime < datetime.now():
-        latestLevel[1] = levelStatus[0]
-        latestLevelTime = timedelta(minutes=30)
-        message = getMessage(levelStatus[0], level)
-        logging.info('Slack level change Status: %s Level: %s %%', levelStatus[0], helpers.calculatePercentage(level))
+    # And different than three readings ago, do not send on init
+    if historicLevels[0] == currentLevelStatus and historicLevels[1] != currentLevelStatus and historicLevels[1] != '' and latestLevelTime < datetime.now():
+        historicLevels[1] = currentLevelStatus
+        latestLevelTime = datetime.now() + timedelta(minutes=30)
+        message = getMessage(currentLevelStatus, reading)
+        logging.info('Slack level change Status: %s Level: %s %%', currentLevelStatus, helpers.calculatePercentage(reading))
 
         return sendSlackMessage(message)
-    elif latestLevel[0] != levelStatus[0]:
+    elif historicLevels[0] != currentLevelStatus:
         # set first step in history
-        latestLevel[0] = levelStatus[0]
-    elif levelStatus[0] == levelStatus[0]:
-        # set two setps in history
-        latestLevel[1] = latestLevel[0]
-        latestLevel[0] = levelStatus[0]
+        historicLevels[0] = currentLevelStatus
+    else:
+        # set two steps in history
+        historicLevels[1] = historicLevels[0]
+        historicLevels[0] = currentLevelStatus
 
     return True
 
+
 # hit incoming webhook slack
 def sendSlackMessage(message):
-    url =  os.environ.get("SLACK_API")
+    url = os.environ.get("SLACK_API")
 
     try:
         requests.post(url, data=json.dumps(message))
+
         return True
     except requests.ConnectionError:
         logging.warning('Connection Error')
 
         return False
 
+
 # build slack message, with attachments
-def getMessage(status, level):
+def getMessage(status, reading):
     message = {
         "attachments": [{
             "fallback": "New reading from CC",
@@ -78,7 +82,7 @@ def getMessage(status, level):
             "fields": [
                 {
                     "title": "Level",
-                    "value": "%s %%" % helpers.calculatePercentage(level),
+                    "value": "%s %%" % helpers.calculatePercentage(reading),
                     "short": True
                 },
                 {
@@ -104,6 +108,7 @@ def getMessage(status, level):
 
     return message
 
+
 # get all slack users
 def getSlackUsers():
     token =  os.environ.get("SLACK_TOKEN")
@@ -112,6 +117,7 @@ def getSlackUsers():
     data = json.loads(r.text)
 
     return data['members']
+
 
 # return member names, only active users
 def filterMembers(members):
@@ -124,13 +130,14 @@ def filterMembers(members):
 
     return elements
 
+
 # return level status and next time to check
-def getLevelStatus(level):
-    if level > 32:
-        return ('a', datetime.now() + timedelta(hours=24))
-    elif 24 < level <= 32:
-        return ('b', datetime.now() + timedelta(hours=12))
-    elif 16 < level <= 24:
-        return ('c', datetime.now() + timedelta(hours=6))
+def getLevelStatus(reading):
+    if reading > 32:
+        return 'a', datetime.now() + timedelta(hours=24)
+    elif 24 < reading <= 32:
+        return 'b', datetime.now() + timedelta(hours=12)
+    elif 16 < reading <= 24:
+        return 'c', datetime.now() + timedelta(hours=6)
     else:
-        return ('d', datetime.now() + timedelta(hours=3))
+        return 'd', datetime.now() + timedelta(hours=3)
