@@ -1,13 +1,11 @@
-import RPi.GPIO as GPIO
-import Adafruit_GPIO.SPI as SPI
 import Adafruit_SSD1306
 import subprocess
 import sys
 from os.path import join
-from Services import helpers
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from Services.sensor import calculatePercentage
 
 RST = 24
 DC = 23
@@ -71,7 +69,7 @@ def drawHelper(currentDrawer, parameters=False):
     draw.rectangle((0,0,width,height), outline=0, fill=0)
 
     # Call the current drawer
-    if parameters != False:
+    if parameters is not False:
         currentDrawer(parameters)
     else:
         currentDrawer()
@@ -95,11 +93,11 @@ def drawIntroPage():
     textHorizontalCenter(top+20, "PIXELFUSION", font1)
 
 def drawCcLevel(data):
-    if data['connection'] == False:
-        textHorizontalCenter(top, "%s %%" % helpers.calculatePercentage(data['level']), font)
+    if data['connection'] is False:
+        textHorizontalCenter(top, "%s %%" % calculatePercentage(data['level']), font)
         textHorizontalCenter(top+20, "WiFi Error", font2)
     else:
-        textCenter("%s %%" % helpers.calculatePercentage(data['level']), font)
+        textCenter("%s %%" % calculatePercentage(data['level']), font)
 
 def drawStatsPage():
     # Shell scripts for system monitoring from here : https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load
