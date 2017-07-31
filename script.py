@@ -21,6 +21,7 @@ while True:
         reading = sensor.calculateDistance()
         latestSensorUpdate = datetime.now() + timedelta(seconds=3)
         if reading is not False:
+            logging.info('CC reading: %s' % reading)
             connectedToSlack = slack.messageCheck(reading)
 
     if latestTimeScreenUpdate < datetime.now() and reading is not False:
